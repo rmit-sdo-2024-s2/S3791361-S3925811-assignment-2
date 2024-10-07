@@ -2,8 +2,8 @@
 
 ## Student details
 
-- Full Name: Demo Student
-- Student ID: sNNNNNN
+- Full Name: Bailey Liebler, Isaac Kelly
+- Student ID: S3791361, S3925811
 
 ## Solution design
 
