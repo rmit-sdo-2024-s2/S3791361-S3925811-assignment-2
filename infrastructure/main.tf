@@ -1,4 +1,4 @@
-# Define the provider - AWS
+# Defines the provider - AWS
 provider "aws" {
   region     = "us-east-1"
   access_key = "ASIA6GF37BXSZVXAHD53"
@@ -15,28 +15,41 @@ resource "aws_key_pair" "deployer_key" {
 # Create a security group for the EC2 instance
 resource "aws_security_group" "web_sg" {
   name_prefix = "web-sg"
-
+#This will allow for ssh from anywhere
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Allows SSH from anywhere
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
+#This will allow for HTTP traffic from anywhere
   ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Allows HTTP traffic from anywhere
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
+#I think this will allow traffic on port 3001
+  ingress {
+    from_port   = 3001
+    to_port     = 3001
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] 
+  }
+
+
+#This will allow for all outbound traffic 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"] # Allows all outbound traffic
+    cidr_blocks = ["0.0.0.0/0"] 
   }
 }
+
+
 
 # Create an EC2 instance
 resource "aws_instance" "web" {
