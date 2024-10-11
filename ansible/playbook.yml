@@ -1,0 +1,59 @@
+---
+- hosts: web
+  become: true
+  tasks:
+    - name: Update and upgrade yum packages
+      yum:
+        name: "*"
+        state: latest
+      when: ansible_os_family == "RedHat"
+
+    - name: Install Docker (Amazon Linux)
+      yum:
+        name: docker
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: Pull PostgreSQL and Foo App images
+      docker_image:
+        name: "{{ item }}"
+        source: pull
+      loop:
+        - postgres:14
+        - mattcul/assignment2app:1.0.0
+
+    - name: Run PostgreSQL container
+      docker_container:
+        name: postgres
+        image: postgres:14
+        state: started
+        restart_policy: always
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_USER: isaac
+          POSTGRES_PASSWORD: Isaac
+
+    - name: Run Foo App container
+      docker_container:
+        name: foo-app
+        image: mattcul/assignment2app:1.0.0
+        state: started
+        restart_policy: always
+        ports:
+          - "80:3001"
+        env:
+          DB_HOSTNAME: "postgres"
+          DB_PORT: "5432"
+          DB_USERNAME: "isaac"
+          DB_PASSWORD: "Isaac"
+          PORT: "3001"
+        links:
+          - postgres
+
