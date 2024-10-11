@@ -46,6 +46,8 @@ sudo snap terraform --classic
 
 we can now ssh into the server
 
+- we now can start to configure the server by using Ansible
+
 ##### Section B
 
 ##### Section C
@@ -65,6 +67,11 @@ Note: If you attempt the "HD" part of this assignment, also include a standalone
 #### Validating that the app is working
 
 How to connect to the app
+
+One way to check if the server is running is that we can ssh into by running
+- ssh ec2-user@${IP_ADDRESS} -i ~/.ssh/foo_ec2_key
+
+another way is once ansible is running we will be able to connect to the sererv via http
 
 ## Contents of this repo
 
