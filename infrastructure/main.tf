@@ -1,9 +1,9 @@
 # Defines the provider - AWS
 provider "aws" {
   region     = "us-east-1"
-  access_key = "ASIA6GF37BXSYRZT23SM"
-  secret_key = "E4JfyUZ9+QNJoGmlWr374EV6/prxXIFrWPyPZRdU"
-  token      = "IQoJb3JpZ2luX2VjEBAaCXVzLXdlc3QtMiJHMEUCIQDjImOY7knttVg7UbxFFJnnJgSgoV2hvDot190dILSZgQIgPUGXZp0bk3Cdxh5eeaEbe8s3COpu8Pg1xDJdS4LzsKIqpQIIaRAAGgw5NzUzNTE3Nzg3ODkiDIvwOwSsap9liMbVWSqCAkvP9YrnZzvVKFeuwDQNHSkEu+dY8H9MDqsByaG+PoC9FK0Pg9VQ+RFjEQ/Q17CkRwmtckjzRNM5EKnQIq8WWc+JYpS7E0I2uOWD1Rs5g421Z0T4LDrxADXHoEoAVU6vWbdRrzge1qfiXUdRBHCkYRCReGeV1XwzaM1KpaCe/5BMywRXJP7akPEHz/9Y2x7AGG1dWXyGkoLF1dFSEOqhCOXcT606kl/dRNdJXF+qRaayP81wf2jB2vkHGIzwx13NM9PdKcrLu1l+Yy3S4VoRXFGzv8i8IISMKGENjYWIiM861B41Eg5vMUd3dUduTxY2Lx7LbbhXlOHqdA4Kpo/Hn2YyBTD8qZy4BjqdAYhQVy2QCe376Oq7BZyRQFzJaF+gm48TWVamzCpOMFUA01hNHJben48voagbdkBs21d1gKalQ1y26i8Y7gnpYrApkwBMRBYuz5F7Ydir+ACDztmddqVG0VYFb+nbp8DnvGzVqVZ+SaJBhOGX+T7qAw+0KzgDfPtBWGetKLGdyRpAeLhswZNuAoJqrqfzY9YYzMIc5RWxMqCC7J4dw1o="
+  access_key = "ASIA6GF37BXSTGUNSNO2"
+  secret_key = "/dzCOMRjs+ALcnVGQdbt7VciPa/YY1OSYY8KZNRl"
+  token      = "IQoJb3JpZ2luX2VjECgaCXVzLXdlc3QtMiJIMEYCIQDJjjsOygfy1TwaFIZW6HLZTvs4/nbkDgKzqvlGfjJFnAIhAIjPe56y/BZKk6Xs7KsV0yxRUIX740dzh/t5f+jPX6MDKq4CCIH//////////wEQABoMOTc1MzUxNzc4Nzg5IgxElBK5gzXQrpXg6uYqggIduUldjrMaYzwoFtKsyia2nb5bD9kTJh/THnAHrM69FydiNC7ALvbCxUmu2lLaQW51Wb/2KqKkP5XFnGlHCalhktzV3g1kfUrIDDNISA7G1xfC/pdtZ/t6KcxJRMT/31Z9IJqWl0JPR1cw4Pj4rmzyaC8B3rTFDhdwqRWz99oqMu/fTMOL2hf+4yES6K+K9es6sf9miikxwE3kAjWmtCByDpr+GX25MxbdSrAa/SlEpQtq4z7Hx+NpWue120O/rn7sSuPNYkD0vduDWHAG9mNw4ntn+mTeh99UlRLt5ryl2/bElAjT72shun+xFunFdjqi/T3STmQ16ngdtVm1IP3+/2kwucuhuAY6nAHmyC170UndKAQzBqTDb5QU8CT/CZKmOjo6kYiha2FE1uIqX8OEU/gFX5uxMLLZs9/jfQPSpWLAzeSFWbLS+8Vz68v4Pdym/9CA5c+5p99Ue16c3D7xTJwAB9d3rSzFkai01krXDMqsptwsfHafdv/TqoJIEySfdM7uYDC4qVneoJ55TovIEPTGByimzqLRA4pRsYUse8vJD1S4BDk="
 }
 
 # Define the key pair
@@ -53,11 +53,25 @@ resource "aws_security_group" "web_sg" {
 
 # Create an EC2 instance
 resource "aws_instance" "web" {
-  ami           = "ami-0fff1b9a61dec8a5f"  # Updated AMI ID
+  ami           = "ami-0fff1b9a61dec8a5f" 
   instance_type = "t2.micro"
   key_name      = aws_key_pair.deployer_key.key_name
 
   vpc_security_group_ids = [aws_security_group.web_sg.id]
+
+  user_data = <<-EOF
+    #!/bin/bash
+    sudo apt update -y
+    sudo apt install -y docker.io
+    sudo systemctl start docker
+    sudo systemctl enable docker
+
+    # Run PostgreSQL container
+    sudo docker run --name postgres -e POSTGRES_USER=isaac -e POSTGRES_PASSWORD=Isaac -d postgres:14
+
+    # Run Foo app container
+    sudo docker run --name foo_app --add-host host.docker.internal:host-gateway -e DB_HOSTNAME=postgres -e DB_PORT=5432 -e DB_USERNAME=isaac -e DB_PASSWORD=Isaac -p 80:3001 mattcul/assignment2app:1.0.0
+  EOF
 
   tags = {
     Name = "web-server"
