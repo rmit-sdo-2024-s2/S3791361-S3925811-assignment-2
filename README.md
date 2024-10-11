@@ -51,6 +51,13 @@ we can now ssh into the server
 ##### Section B
 
 ##### Section C
+- First the team created a S3 bucked called foostatebuckets39, this stores the terraform state file. 
+- Then a DynamoDB table was created called foostatelock, which was set up for state locking. 
+- Then the back end configuration was added to the main.tf file.
+- The file was updated to configure terraform to use the S3 bucket and the DynamoDB table. 
+- Then terraform was initialised with the command – terraform init -reconfigure
+- After this we checked if the state file was stored in the S3 by checking the AWS management console. 
+- We did the same with DynamoDB table to ensure foostatelock was active and being use. 
 
 
 
