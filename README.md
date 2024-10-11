@@ -14,7 +14,7 @@
 #### Key data flows
 
 process diagram and infrastructure architecture diagram
-
+![Infrastructure diagram](Images/Infrastructure.png)
 ### Deployment process
 
 #### Prerequisites
