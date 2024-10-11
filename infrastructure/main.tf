@@ -1,9 +1,20 @@
 # Defines the provider - AWS
 provider "aws" {
   region     = "us-east-1"
-  access_key = "ASIA6GF37BXSTGUNSNO2"
-  secret_key = "/dzCOMRjs+ALcnVGQdbt7VciPa/YY1OSYY8KZNRl"
-  token      = "IQoJb3JpZ2luX2VjECgaCXVzLXdlc3QtMiJIMEYCIQDJjjsOygfy1TwaFIZW6HLZTvs4/nbkDgKzqvlGfjJFnAIhAIjPe56y/BZKk6Xs7KsV0yxRUIX740dzh/t5f+jPX6MDKq4CCIH//////////wEQABoMOTc1MzUxNzc4Nzg5IgxElBK5gzXQrpXg6uYqggIduUldjrMaYzwoFtKsyia2nb5bD9kTJh/THnAHrM69FydiNC7ALvbCxUmu2lLaQW51Wb/2KqKkP5XFnGlHCalhktzV3g1kfUrIDDNISA7G1xfC/pdtZ/t6KcxJRMT/31Z9IJqWl0JPR1cw4Pj4rmzyaC8B3rTFDhdwqRWz99oqMu/fTMOL2hf+4yES6K+K9es6sf9miikxwE3kAjWmtCByDpr+GX25MxbdSrAa/SlEpQtq4z7Hx+NpWue120O/rn7sSuPNYkD0vduDWHAG9mNw4ntn+mTeh99UlRLt5ryl2/bElAjT72shun+xFunFdjqi/T3STmQ16ngdtVm1IP3+/2kwucuhuAY6nAHmyC170UndKAQzBqTDb5QU8CT/CZKmOjo6kYiha2FE1uIqX8OEU/gFX5uxMLLZs9/jfQPSpWLAzeSFWbLS+8Vz68v4Pdym/9CA5c+5p99Ue16c3D7xTJwAB9d3rSzFkai01krXDMqsptwsfHafdv/TqoJIEySfdM7uYDC4qVneoJ55TovIEPTGByimzqLRA4pRsYUse8vJD1S4BDk="
+  access_key = "ASIA6GF37BXSYLHYOYPA"
+  secret_key = "iZLnX9/gxZvlIHWkeLnFxtsgfsTpydYxvv4hymWm"
+  token      = "IQoJb3JpZ2luX2VjEC8aCXVzLXdlc3QtMiJIMEYCIQCuH+EYk6vL3edQDlySyLV0Evr2XnWZZZXI7seFW6OIawIhALrE+bEheyUbegk/pOBH0t6I3X/mDKuxh6umEaAK3uvxKq4CCIj//////////wEQABoMOTc1MzUxNzc4Nzg5IgzRe7rRw6qdq2pwo8kqggKwR46HpJLHGQOESYGJHuE+XBzmwiTNJ7ISiEWr+KpJ5LeW4EvsPnZG/+NHnVpOr+OHJZZTx5D9JnlFJCafEEVF0E763FCxpYvHAK+nvTuF8yhLeuQoQs6kwWgDVCSountrHcO9iKUXzppdWf0tm4Qn+2bkMrhkRCUVoNBVrJkaxMs+bSBC9Oiq62hdC16KARXI2K8DH5763lfp8SlShGCSH2PPrq4HAN72vB1o+Olb+MilVJExVxFM76dGVqMo8OIrMGYm5vdGs4l7P6Hb2oLiKKb2aGnz5Yjhe1K/IprlmLzeWqIYVC99UpsXW8fYQqrRRN9yrAICHYTnHEkSkyHbElowiJKjuAY6nAFYn6msQY6fOybnKdAwRy9VWXWcJ9EW+VkbH7VEqKPrgK8qP9pf8R5eYH3ZWHRJA74QeCFdkHhJpTam94TsBP6RjNjVC9nCTiPkmT3X5Mdww4izw2ratmMRBtrY+cb+G/UElXxeFWF2tGhd1iMDdpaCD2OIf2KXwlzKG7AIUhHg/xMeFK09R3rEh6evOzYsCe48j+1zHFwOZue+C7Q="
+}
+
+
+# Terraform S3 backend configuration
+terraform {
+  backend "s3" {
+    bucket         = "foostatebuckets39"
+    key            = "terraform/state"
+    region         = "us-east-1"
+    dynamodb_table = "foostatelock"
+  }
 }
 
 # Define the key pair
