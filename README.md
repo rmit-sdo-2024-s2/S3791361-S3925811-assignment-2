@@ -15,6 +15,8 @@
 
 process diagram and infrastructure architecture diagram
 ![Infrastructure diagram](Images/Infrastructure.png "Infrastructure")
+
+![process diagram](Images/process.png "process")
 ### Deployment process
 
 #### Prerequisites
