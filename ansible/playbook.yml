@@ -40,6 +40,17 @@
           POSTGRES_USER: isaac
           POSTGRES_PASSWORD: Isaac
 
+    - name: Wait for PostgreSQL to be ready
+      wait_for:
+        host: localhost
+        port: 5432
+        delay: 5
+        timeout: 30
+
+     - name: Initialize database with snapshot-prod-data.sql
+       command: docker exec postgres psql -U isaac -d postgres -f /docker-entrypoint-initdb.d/snapshot-prod-data.sql
+
+
     - name: Run Foo App container
       docker_container:
         name: foo-app
