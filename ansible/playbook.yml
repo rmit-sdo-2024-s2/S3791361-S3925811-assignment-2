@@ -1,5 +1,6 @@
 ---
-- hosts: web
+- name: Configure Web Server
+  hosts: web-server
   become: true
   tasks:
     - name: Update and upgrade yum packages
@@ -8,50 +9,24 @@
         state: latest
       when: ansible_os_family == "RedHat"
 
-    - name: Install Docker (Amazon Linux)
+    - name: Install Docker (Amazon Linux) #Here docker is installed on Amazon
       yum:
         name: docker
         state: present
       when: ansible_os_family == "RedHat"
 
-    - name: Start and enable Docker service
+    - name: Start and enable Docker service #This allows for DOcker to be installed
       systemd:
         name: docker
-        enabled: yes
+        enabled: yes #This starts docker on the when booted 
         state: started
 
-    - name: Pull PostgreSQL and Foo App images
+    - name: Pull Foo App image
       docker_image:
-        name: "{{ item }}"
+        name: mattcul/assignment2app:1.0.0 #This tells docker what image to pull and pulls the latest 
         source: pull
-      loop:
-        - postgres:14
-        - mattcul/assignment2app:1.0.0
 
-    - name: Run PostgreSQL container
-      docker_container:
-        name: postgres
-        image: postgres:14
-        state: started
-        restart_policy: always
-        ports:
-          - "5432:5432"
-        env:
-          POSTGRES_USER: isaac
-          POSTGRES_PASSWORD: Isaac
-
-    - name: Wait for PostgreSQL to be ready
-      wait_for:
-        host: localhost
-        port: 5432
-        delay: 5
-        timeout: 30
-
-     - name: Initialize database with snapshot-prod-data.sql
-       command: docker exec postgres psql -U isaac -d postgres -f /docker-entrypoint-initdb.d/snapshot-prod-data.sql
-
-
-    - name: Run Foo App container
+    - name: Run Foo App container #The name of the container, the image is being used, the ensuring container had been set and rest happens
       docker_container:
         name: foo-app
         image: mattcul/assignment2app:1.0.0
@@ -60,11 +35,52 @@
         ports:
           - "80:3001"
         env:
-          DB_HOSTNAME: "postgres"
+          DB_HOSTNAME: "postgres" #Database name, port, username, password and application port
           DB_PORT: "5432"
           DB_USERNAME: "isaac"
           DB_PASSWORD: "Isaac"
           PORT: "3001"
-        links:
-          - postgres
+
+- name: Configure Database Server #Here the database server is configuered
+  hosts: db-server
+  become: true
+  tasks:
+    - name: Install Docker (Amazon Linux) #Same as before Docker gets installed 
+      yum:
+        name: docker
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Start and enable Docker service #Then docker starts and is checked to make sure it is infact running
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: Copy snapshot-prod-data.sql to EC2 instance #This one locates the path of the sql, i couldnt find another way to do it.
+      copy:
+        src: /home/isaac/S3791361-S3925811-assignment-2/misc/snapshot-prod-data.sql
+        dest: /home/ec2-user/snapshot-prod-data.sql #This is the destination of the path on EC2
+
+    - name: Pull PostgreSQL image
+      docker_image:
+        name: postgres:14 #This is for what version of the Postgresql to pull and then pulls the newest image
+        source: pull
+
+    - name: Run PostgreSQL container #Here is the same as earlier its the name, image pulled, the state. and restarts if container stops
+      docker_container:
+        name: postgres
+        image: postgres:14
+        state: started
+        restart_policy: always
+        ports:
+          - "5432:5432" # different port set up
+        env:
+          POSTGRES_USER: isaac
+          POSTGRES_PASSWORD: Isaac
+        volumes:
+          - /home/ec2-user/snapshot-prod-data.sql:/docker-entrypoint-initdb.d/snapshot-prod-data.sql:ro #So this mounts the SQL so it can be installed
+
+    - name: Initialize database with snapshot-prod-data.sql
+      command: docker exec postgres psql -U isaac -d postgres -f /docker-entrypoint-initdb.d/snapshot-prod-data.sql #and this runs the SQL to initalise the database
 
