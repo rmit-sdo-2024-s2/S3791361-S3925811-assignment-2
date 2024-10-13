@@ -2,10 +2,10 @@ name: Assignment Two CI Pipeline
 on:
   push:
     branches:
-      - '**'
+      - 'main'
   pull_request:
     branches:
-      - '**'
+      - 'main'
 jobs:
     Deploy:
         runs-on: ubuntu-latest
