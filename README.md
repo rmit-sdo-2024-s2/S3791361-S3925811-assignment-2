@@ -91,13 +91,11 @@ The reason the team chose to manually create the bucket and table was to avoid i
 
 #### Description of the GitHub Actions workflow
 
-Section D Info
-
-No credentials stored in git repo. place them in the workflow
+due to time restraints the github actions workflow couldn't be completed.
 
 #### Backup process: deploying from a shell script
 
-Note: If you attempt the "HD" part of this assignment, also include a standalone shell script which performs the deployment. Use your README file to explain which file does what.
+we have a shell script that can launch terraform and create a new ssh key if needed.
 
 #### Validating that the app is working
 
