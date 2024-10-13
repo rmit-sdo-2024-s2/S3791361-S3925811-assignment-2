@@ -44,6 +44,25 @@ Using Amazon Linux, we were able to run both the app and the data base for the i
 Docker was used to ensure that both the app and the database can be deployed consistently and without conflicts. 
 Using terraform init, reconfigure and apply, we were able to successfully use Terraform. Ansible was used to configure the EC2 instances once they were provisioned by Terraform. We created the playbook to ensure all containers are installed correctly. 
 
+To run terraform please go to the infrastructure folder and enter the following- 
+-	terraform init
+-	terraform validate
+-	terraform plan
+-	terraform apply
+-	you may need to generate a ssh key after terraform plan, if so please enter the following - ssh-keygen -t rsa -b 4096 -f ~/.ssh/foo_ec2_key -N '' Then proceed to terraform plan. 
+
+For Ansible please change the IP within the folder ansible/inventory.ini to the one that will appear after you run through the above terraform steps. 
+
+The web server IP is the instance_public_ip =
+The DB IP is the db_instance_public_ip =
+For reasons we don’t understand sometimes the first time you run this you may get an error, please try again and the expected output should look something like this - 
+
+PLAY RECAP ***************************************************************************************************************************************************
+3.80.244.157               : ok=6    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+52.204.199.168             : ok=7    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+
+
 Justification 
 The reason we created the main.tf like we did was to ensure the application would run correctly. There were multiple different editions including we tried to clone the repo on AWS instances, which we later discovered cause numerous other issues. This was the straightforward way we could figure. 
 
