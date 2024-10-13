@@ -1,0 +1,35 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    environment:
+      POSTGRES_USER: isaac
+      POSTGRES_PASSWORD: Isaac
+      POSTGRES_DB: foo
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../misc/snapshot-prod-data.sql:/docker-entrypoint-initdb.d/init.sql
+
+
+
+  foo-app:
+    image: mattcul/assignment2app:1.0.0
+    container_name: foo-app
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    environment:
+      DB_HOSTNAME: postgres
+      DB_PORT: 5432
+      DB_USERNAME: isaac
+      DB_PASSWORD: Isaac
+      DB_NAME: foo
+      PORT: 3001
+
+volumes:
+  postgres_data:
+

@@ -1,7 +1,9 @@
+require('dotenv').config();
+console.log(process.env); 
 const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
-const port = process.env.PORT
+const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json())
 app.use(
@@ -32,7 +34,7 @@ const pool = new Pool({
     host: process.env.DB_HOSTNAME,
     database: 'foo',
     password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
+    port: process.env.DB_PORT || 5432,
 })
 console.log(pool);
 
