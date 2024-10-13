@@ -16,4 +16,4 @@ jobs:
           with:
             node-version: "18"
         - name: running script
-          run: batch Deploy.sh
+          run: bash Deploy.sh
