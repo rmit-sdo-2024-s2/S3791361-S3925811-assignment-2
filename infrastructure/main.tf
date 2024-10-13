@@ -63,7 +63,7 @@ terraform {
 # The key is here to allow access, i believe this is working correctly now
 resource "aws_key_pair" "deployer_key" {
   key_name   = "deployer-key"
-  public_key = file("~/.ssh/id_rsa.pub")
+  public_key = file("~/.ssh/foo_ec2_key.pub")
 }
 
 

@@ -16,5 +16,4 @@ jobs:
           with:
             node-version: "18"
         - name: running script
-          working-directory: ./src
           run: bash Deploy.sh
